@@ -13,9 +13,7 @@ use log::{debug, info};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-
 use crate::utils::time_utils;
-
 use super::client::{MarketDataClient, ProviderConfig};
 use super::import::{ImportValidationStatus, QuoteConverter, QuoteImport, QuoteValidator};
 use super::model::{DataSource, LatestQuotePair, Quote, ResolvedQuote, SymbolSearchResult};
@@ -1350,6 +1348,7 @@ where
                     | DATA_SOURCE_MARKET_DATA_APP
                     | DATA_SOURCE_METAL_PRICE_API
                     | DATA_SOURCE_FINNHUB
+                    | DATA_SOURCE_FINECT
             );
             // Check if API key is set (this may trigger keychain prompt on macOS)
             let has_key = if requires_key {

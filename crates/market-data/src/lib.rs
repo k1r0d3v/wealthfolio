@@ -86,6 +86,7 @@ pub use provider::openfigi::OpenFigiProvider;
 pub use provider::us_treasury_calc::{TreasuryBondDetails, UsTreasuryCalcProvider};
 pub use provider::yahoo::{YahooDividend, YahooProvider};
 pub use provider::{MarketDataProvider, ProviderCapabilities, RateLimit};
+pub use provider::finect::FinectProvider;
 
 // Re-export registry types
 pub use registry::{

@@ -1,5 +1,4 @@
 import { TickerAvatar } from "@/components/ticker-avatar";
-import { Card } from "@wealthfolio/ui/components/ui/card";
 import {
   calculateActivityValue,
   formatSplitRatio,
@@ -16,6 +15,7 @@ import { useSettingsContext } from "@/lib/settings-provider";
 import { ActivityDetails } from "@/lib/types";
 import { formatDateTime } from "@/lib/utils";
 import { formatAmount, Separator } from "@wealthfolio/ui";
+import { Card } from "@wealthfolio/ui/components/ui/card";
 import { Link } from "react-router-dom";
 import { ActivityOperations } from "../activity-operations";
 import { ActivityTypeBadge } from "../activity-type-badge";
@@ -53,6 +53,7 @@ export const ActivityTableMobile = ({
     <div className="min-h-0 flex-1 space-y-2 overflow-auto">
       {activities.map((activity) => {
         const symbol = activity.assetSymbol;
+        const name = activity.assetName;
         const activityType = activity.activityType;
         const isTransferActivity =
           activityType === ActivityType.TRANSFER_IN || activityType === ActivityType.TRANSFER_OUT;
@@ -67,7 +68,7 @@ export const ActivityTableMobile = ({
           : isCashActivity(activityType) && !isAssetBackedIncome;
         const isOptionActivity = activity.instrumentType === "OPTION";
         const parsedOption = isOptionActivity ? parseOccSymbol(symbol) : null;
-        const displaySymbol = isCash ? "Cash" : parsedOption ? parsedOption.underlying : symbol;
+        const displayTitle = isCash ? "Cash" : parsedOption ? parsedOption.underlying : name;
         const avatarSymbol = isCash ? "$CASH" : symbol;
         const optionSubtitle = parsedOption
           ? `${new Date(parsedOption.expiration + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })} $${parsedOption.strikePrice} ${parsedOption.optionType}`
@@ -79,7 +80,7 @@ export const ActivityTableMobile = ({
         if (isCompactView) {
           const activityTypeLabel = ActivityTypeNames[activity.activityType];
           return (
-            <Card key={activity.id} className="p-3">
+            <Card key={activity.id} className="p-4">
               <div className="flex items-center gap-3">
                 {(() => {
                   const inner = (
@@ -87,18 +88,22 @@ export const ActivityTableMobile = ({
                       <TickerAvatar symbol={avatarSymbol} className="h-10 w-10 flex-shrink-0" />
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between gap-2">
-                          <p className="truncate font-semibold">{displaySymbol}</p>
+                          <p className="truncate font-semibold">{displayTitle}</p>
                           {activity.activityType !== "SPLIT" && (
                             <span className="shrink-0 text-sm font-semibold">
                               {formatAmount(displayValue, activity.currency)}
                             </span>
                           )}
                         </div>
+                        <p className="text-muted-foreground truncate text-xs font-thin">
+                          {symbol}
+                        </p>
                         <p className="text-muted-foreground text-xs">
                           {optionSubtitle
                             ? `${activityTypeLabel} · ${optionSubtitle}`
                             : activityTypeLabel}
                         </p>
+
                         <div className="text-muted-foreground mt-0.5 flex items-center gap-1.5 text-xs">
                           <span>{formattedDate.date}</span>
                           {!isCash &&
@@ -150,7 +155,7 @@ export const ActivityTableMobile = ({
                     <>
                       <TickerAvatar symbol={avatarSymbol} className="h-10 w-10" />
                       <div>
-                        <p className="font-semibold">{displaySymbol}</p>
+                        <p className="font-semibold">{displayTitle}</p>
                         <p className="text-muted-foreground text-xs">
                           {isCash ? activity.currency : (optionSubtitle ?? activity.assetName)}
                         </p>

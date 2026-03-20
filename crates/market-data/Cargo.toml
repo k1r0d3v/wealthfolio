@@ -7,9 +7,15 @@ edition = "2021"
 async-trait = "0.1"
 chrono = { version = "0.4", features = ["serde"] }
 log = "0.4"
+md5 = "0.8.0"
 num-traits = "0.2"
-reqwest = { version = "0.12", features = ["json"] }
-rust_decimal = { version = "1", features = ["serde"] }
+reqwest = { version = "0.12", features = [
+    "json",
+    "gzip",
+    "brotli",
+    "deflate",
+] }
+rust_decimal = { version = "1", features = ["serde", "serde-with-float"] }
 serde = { version = "1", features = ["derive", "rc"] }
 serde_json = "1"
 thiserror = "2"
@@ -19,6 +25,7 @@ tracing = "0.1"
 urlencoding = "2"
 yahoo_finance_api = "4.1"
 lazy_static = "1.4"
+
 
 [dev-dependencies]
 rust_decimal_macros = "1"

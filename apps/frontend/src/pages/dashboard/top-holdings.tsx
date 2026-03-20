@@ -1,6 +1,5 @@
 import { TickerAvatar } from "@/components/ticker-avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@wealthfolio/ui/components/ui/card";
-import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
+import { useBalancePrivacy } from "@/hooks/use-balance-privacy";
 import { HoldingType, isAlternativeAssetKind, type AssetKind } from "@/lib/constants";
 import { parseOccSymbol } from "@/lib/occ-symbol";
 import { Holding } from "@/lib/types";
@@ -13,10 +12,12 @@ import {
   Icons,
   usePersistentState,
 } from "@wealthfolio/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@wealthfolio/ui/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@wealthfolio/ui/components/ui/popover";
+import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
+
 import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useBalancePrivacy } from "@/hooks/use-balance-privacy";
 
 const MAX_DISPLAYED_HOLDINGS = 5;
 const MAX_STACKED_AVATARS = 5;
@@ -43,6 +44,7 @@ function HoldingRow({
   onClick,
 }: HoldingRowProps) {
   const symbol = holding.instrument?.symbol ?? holding.id;
+  const name = holding.instrument?.name ?? null;
   const parsedOption = parseOccSymbol(symbol);
   const displayName = parsedOption ? parsedOption.underlying : symbol.split(".")[0];
   const subtitle = parsedOption
@@ -65,10 +67,11 @@ function HoldingRow({
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && onClick?.()}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3  overflow-hidden">
         <TickerAvatar symbol={avatarSymbol} className="size-9" />
         <div className="flex flex-col">
-          <span className="text-sm font-semibold">{displayName}</span>
+          <span className="text-md truncate font-semibold">{name}</span>
+          <span className="text-muted-foreground truncate text-xs font-thin">{displayName}</span>
           <span className="text-muted-foreground text-xs">{subtitle}</span>
         </div>
       </div>

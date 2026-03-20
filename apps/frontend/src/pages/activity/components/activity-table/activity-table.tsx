@@ -1,7 +1,32 @@
 import React from "react";
 
 import { TickerAvatar } from "@/components/ticker-avatar";
+import {
+  calculateActivityValue,
+  formatSplitRatio,
+  isAssetBackedIncomeActivity,
+  isCashActivity,
+  isCashTransfer,
+  isFeeActivity,
+  isIncomeActivity,
+  isSplitActivity,
+} from "@/lib/activity-utils";
+import { ActivityType, getExchangeDisplayName } from "@/lib/constants";
 import { parseOccSymbol } from "@/lib/occ-symbol";
+import { useSettingsContext } from "@/lib/settings-provider";
+import { ActivityDetails } from "@/lib/types";
+import { formatDateTime } from "@/lib/utils";
+import {
+  type OnChangeFn,
+  type VisibilityState,
+  ColumnDef,
+  SortingState,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Button, formatAmount } from "@wealthfolio/ui";
 import { DataTableColumnHeader } from "@wealthfolio/ui/components/ui/data-table/data-table-column-header";
 import {
   DropdownMenu,
@@ -18,31 +43,6 @@ import {
   TableHeader,
   TableRow,
 } from "@wealthfolio/ui/components/ui/table";
-import {
-  calculateActivityValue,
-  isAssetBackedIncomeActivity,
-  isCashActivity,
-  isCashTransfer,
-  isFeeActivity,
-  isIncomeActivity,
-  isSplitActivity,
-  formatSplitRatio,
-} from "@/lib/activity-utils";
-import { ActivityType, getExchangeDisplayName } from "@/lib/constants";
-import { ActivityDetails } from "@/lib/types";
-import { formatDateTime } from "@/lib/utils";
-import { useSettingsContext } from "@/lib/settings-provider";
-import {
-  type OnChangeFn,
-  type VisibilityState,
-  ColumnDef,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Button, formatAmount } from "@wealthfolio/ui";
 import { Link } from "react-router-dom";
 import { useActivityMutations } from "../../hooks/use-activity-mutations";
 import { ActivityOperations } from "../activity-operations";
@@ -153,6 +153,7 @@ export const ActivityTable = ({
         header: ({ column }) => <DataTableColumnHeader column={column} title="Symbol" />,
         cell: ({ row }) => {
           const symbol = String(row.getValue("assetSymbol"));
+          const assetName = String(row.getValue("assetName"));
           const assetId = row.original.assetId;
           const activityType = String(row.getValue("activityType"));
           const instrumentType = row.original.instrumentType;
@@ -168,7 +169,7 @@ export const ActivityTable = ({
           const isOptionActivity = instrumentType === "OPTION";
           const parsedOption = isOptionActivity ? parseOccSymbol(symbol) : null;
 
-          const displaySymbol = isCash ? "Cash" : parsedOption ? parsedOption.underlying : symbol;
+          const displayTitle = isCash ? "Cash" : parsedOption ? parsedOption.underlying : assetName;
           const avatarSymbol = isCash ? "$CASH" : symbol;
           const normalizedSymbol = (parsedOption?.underlying ?? symbol).trim().toUpperCase();
           const shouldShowExchange =
@@ -177,7 +178,7 @@ export const ActivityTable = ({
             ? getExchangeDisplayName(row.original.exchangeMic)
             : "";
 
-          const assetName = row.getValue("assetName");
+
           const currency = row.getValue("currency");
 
           // Option subtitle: "Mar 29 $150 CALL"
@@ -189,16 +190,16 @@ export const ActivityTable = ({
             <div className="flex max-w-[220px] items-center gap-2">
               <TickerAvatar symbol={avatarSymbol} className="h-8 w-8 shrink-0" />
               <div className="flex min-w-0 flex-col">
-                <span className="flex items-center gap-1 truncate font-medium">
-                  <span className="truncate">{displaySymbol}</span>
+                <span className="flex items-center gap-1 truncate text-md">
+                  <span className="truncate font-semibold">{displayTitle}</span>
                   {exchangeDisplay ? (
                     <span className="text-muted-foreground shrink-0 text-xs font-normal">
                       · {exchangeDisplay}
                     </span>
                   ) : null}
                 </span>
-                <span className="text-muted-foreground truncate text-xs font-light">
-                  {isCash ? String(currency) : (optionSubtitle ?? String(assetName ?? currency))}
+                <span className="text-muted-foreground truncate text-xs font-thin">
+                  {isCash ? String(currency) : (optionSubtitle ?? String(symbol ?? currency))}
                 </span>
               </div>
             </div>

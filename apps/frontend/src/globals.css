@@ -438,8 +438,8 @@
   --inset-bottom: env(safe-area-inset-bottom, 0px);
   --inset-left: env(safe-area-inset-left, 0px);
 
-  --mobile-nav-ui-height: 64px; /* nav bar height */
-  --mobile-nav-gap: 12px; /* space between nav and bottom */
+  --mobile-nav-ui-height: 80px; /* nav bar height */
+  --mobile-nav-gap: 0px; /* space between nav and bottom */
 
   /* Sonner toast overrides - solid backgrounds for better readability */
   --toast-bg: hsl(var(--flexoki-bg-2));

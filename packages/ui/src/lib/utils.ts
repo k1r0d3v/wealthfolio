@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { DECIMAL_PRECISION, DISPLAY_DECIMAL_PRECISION } from "./constants";
+import { DECIMAL_PRECISION, MAX_DISPLAY_DECIMAL_PRECISION, MIN_DISPLAY_DECIMAL_PRECISION } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -10,8 +10,8 @@ export function cn(...inputs: ClassValue[]) {
  * Format amount with currency support, including special handling for pence (GBp/GBX)
  */
 const DECIMAL_FORMAT_OPTIONS: Intl.NumberFormatOptions = {
-  minimumFractionDigits: DISPLAY_DECIMAL_PRECISION,
-  maximumFractionDigits: DISPLAY_DECIMAL_PRECISION,
+  minimumFractionDigits: MIN_DISPLAY_DECIMAL_PRECISION,
+  maximumFractionDigits: MAX_DISPLAY_DECIMAL_PRECISION,
 };
 
 const decimalFormatter = new Intl.NumberFormat("en-US", DECIMAL_FORMAT_OPTIONS);

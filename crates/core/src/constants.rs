@@ -5,7 +5,7 @@ pub const PORTFOLIO_TOTAL_ACCOUNT_ID: &str = "TOTAL";
 pub const DECIMAL_PRECISION: u32 = 8;
 
 /// Decimal precision for display
-pub const DISPLAY_DECIMAL_PRECISION: u32 = 2;
+pub const DISPLAY_DECIMAL_PRECISION: u32 = 4;
 
 /// Quantity threshold for significant positions
 pub const QUANTITY_THRESHOLD: &str = "0.00000001";

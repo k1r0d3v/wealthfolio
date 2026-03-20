@@ -160,17 +160,18 @@ export const HoldingsTableMobile = ({
         {filteredHoldings.length > 0 ? (
           filteredHoldings.map((holding) => {
             const symbol = holding.instrument?.symbol ?? holding.id;
+            const name = holding.instrument?.name ?? null;
             const isCash = symbol.startsWith("$CASH");
             const parsedOption = isCash ? null : parseOccSymbol(symbol);
             const avatarSymbol = isCash ? "$CASH" : parsedOption ? parsedOption.underlying : symbol;
-            const displaySymbol = isCash
+            const displayTitle = isCash
               ? symbol.split("-")[0]
               : parsedOption
                 ? parsedOption.underlying
-                : symbol;
+                : name;
             const subtitle = parsedOption
               ? `${new Date(parsedOption.expiration + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })} $${parsedOption.strikePrice} ${parsedOption.optionType}`
-              : (holding.instrument?.name ?? null);
+              : (symbol);
             const isNavigable = !isCash && holding.instrument?.symbol;
 
             return (
@@ -186,9 +187,9 @@ export const HoldingsTableMobile = ({
                   <div className="flex flex-1 items-center gap-3 overflow-hidden">
                     <TickerAvatar symbol={avatarSymbol} className="h-10 w-10" />
                     <div className="flex-1 overflow-hidden">
-                      <p className="truncate font-semibold">{displaySymbol}</p>
+                      <p className="truncate font-semibold">{displayTitle}</p>
                       {subtitle && (
-                        <p className="text-muted-foreground truncate text-sm">{subtitle}</p>
+                        <p className="text-muted-foreground truncate text-xs font-thin">{subtitle}</p>
                       )}
                     </div>
                   </div>

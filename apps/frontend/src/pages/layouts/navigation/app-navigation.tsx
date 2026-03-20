@@ -19,7 +19,7 @@ export interface NavigationProps {
 const staticNavigation: NavigationProps = {
   primary: [
     {
-      icon: <Icons.Dashboard className="size-6" />,
+      icon: <Icons.Holdings className="size-6" />,
       title: "Dashboard",
       href: "/dashboard",
       keywords: ["home", "overview", "summary"],

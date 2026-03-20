@@ -30,6 +30,7 @@ pub mod metal_price_api;
 pub mod openfigi;
 pub mod us_treasury_calc;
 pub mod yahoo;
+pub mod finect;
 
 // Re-exports
 pub use capabilities::{ProviderCapabilities, RateLimit};

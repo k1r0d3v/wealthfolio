@@ -89,6 +89,15 @@ impl ProviderCapabilities {
                     "Profiles".to_string(),
                 ],
             }),
+            "FINECT" => Some(Self {
+                instruments: "Stocks".to_string(),
+                coverage: "Global".to_string(),
+                features: vec![
+                    "Real-time".to_string(),
+                    "Search".to_string(),
+                    "Historical".to_string(),
+                ],
+            }),
             _ => None,
         }
     }

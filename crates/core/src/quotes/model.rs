@@ -21,6 +21,7 @@ pub const DATA_SOURCE_FINNHUB: &str = "FINNHUB";
 pub const DATA_SOURCE_US_TREASURY_CALC: &str = "US_TREASURY_CALC";
 pub const DATA_SOURCE_BOERSE_FRANKFURT: &str = "BOERSE_FRANKFURT";
 pub const DATA_SOURCE_BROKER: &str = "BROKER";
+pub const DATA_SOURCE_FINECT: &str = "FINECT";
 
 // =============================================================================
 // Data Source
@@ -54,6 +55,8 @@ pub enum DataSource {
     BoerseFrankfurt,
     /// Broker-provided price from position sync
     Broker,
+    /// Finect
+    Finect,
     /// Manual entry by user
     #[default]
     Manual,
@@ -71,6 +74,7 @@ impl DataSource {
             DataSource::UsTreasuryCalc => DATA_SOURCE_US_TREASURY_CALC,
             DataSource::BoerseFrankfurt => DATA_SOURCE_BOERSE_FRANKFURT,
             DataSource::Broker => DATA_SOURCE_BROKER,
+            DataSource::Finect => DATA_SOURCE_FINECT,
             DataSource::Manual => DATA_SOURCE_MANUAL,
         }
     }
@@ -93,6 +97,7 @@ impl From<&str> for DataSource {
             DATA_SOURCE_US_TREASURY_CALC => DataSource::UsTreasuryCalc,
             DATA_SOURCE_BOERSE_FRANKFURT => DataSource::BoerseFrankfurt,
             DATA_SOURCE_BROKER => DataSource::Broker,
+            DATA_SOURCE_FINECT => DataSource::Finect,
             _ => DataSource::Manual,
         }
     }

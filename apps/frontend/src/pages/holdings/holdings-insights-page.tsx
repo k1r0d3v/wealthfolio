@@ -143,62 +143,15 @@ export const HoldingsInsightsPage = ({ accountId: accountIdProp }: HoldingsInsig
 
     return (
       <div className="space-y-4">
-        {/* Row 1: Cash Balance (full width) */}
-        <CashHoldingsWidget cashHoldings={cashHoldings ?? []} isLoading={isLoading} />
-
-        {/* Row 2: 4 semi-donut charts */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <HoldingCurrencyChart
-            holdings={[...cashHoldings, ...nonCashHoldings]}
-            baseCurrency={baseCurrency}
-            isLoading={isLoading}
-            onCurrencySectionClick={(currencyName) =>
-              handleChartSectionClick("currency", currencyName, `Holdings in ${currencyName}`)
-            }
-          />
-
-          <DrillableAccountChart isLoading={isLoading} />
-
-          <DrillableDonutChart
-            title="Classes"
-            allocation={allocations?.assetClasses}
-            baseCurrency={baseCurrency}
-            isLoading={isLoading}
-            onCategoryClick={(categoryId, categoryName) =>
-              handleChartSectionClick(
-                "class",
-                categoryName,
-                `Asset Class: ${categoryName}`,
-                categoryId,
-              )
-            }
-            onCardClick={() => openAllocationSheet(allocations?.assetClasses)}
-          />
-
-          <DrillableDonutChart
-            title="Regions"
-            allocation={allocations?.regions}
-            baseCurrency={baseCurrency}
-            isLoading={isLoading}
-            onCategoryClick={(categoryId, categoryName) =>
-              handleChartSectionClick(
-                "country",
-                categoryName,
-                `Holdings in ${categoryName}`,
-                categoryId,
-              )
-            }
-            onCardClick={() => openAllocationSheet(allocations?.regions)}
-          />
-        </div>
-
-        {/* Row 3: Composition (col-span-3) + Right column (Security Type, Risk Profile, Sectors) */}
+        {/* Row 1: Composition (col-span-3) + Right column (Cash, Security Type, Risk Profile, Sectors) */}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
           <div className="col-span-1 lg:col-span-3">
             <PortfolioComposition holdings={nonCashHoldings ?? []} isLoading={isLoading} />
           </div>
 
           <div className="col-span-1 space-y-4">
+            <CashHoldingsWidget cashHoldings={cashHoldings ?? []} isLoading={isLoading} />
+
             {hasRiskAllocations && (
               <CompactAllocationStrip
                 title="Risk Composition"
@@ -247,6 +200,52 @@ export const HoldingsInsightsPage = ({ accountId: accountIdProp }: HoldingsInsig
               }
             />
           </div>
+        </div>
+
+        {/* Row 3: 4 semi-donut charts */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <HoldingCurrencyChart
+            holdings={[...cashHoldings, ...nonCashHoldings]}
+            baseCurrency={baseCurrency}
+            isLoading={isLoading}
+            onCurrencySectionClick={(currencyName) =>
+              handleChartSectionClick("currency", currencyName, `Holdings in ${currencyName}`)
+            }
+          />
+
+          <DrillableAccountChart isLoading={isLoading} />
+
+          <DrillableDonutChart
+            title="Classes"
+            allocation={allocations?.assetClasses}
+            baseCurrency={baseCurrency}
+            isLoading={isLoading}
+            onCategoryClick={(categoryId, categoryName) =>
+              handleChartSectionClick(
+                "class",
+                categoryName,
+                `Asset Class: ${categoryName}`,
+                categoryId,
+              )
+            }
+            onCardClick={() => openAllocationSheet(allocations?.assetClasses)}
+          />
+
+          <DrillableDonutChart
+            title="Regions"
+            allocation={allocations?.regions}
+            baseCurrency={baseCurrency}
+            isLoading={isLoading}
+            onCategoryClick={(categoryId, categoryName) =>
+              handleChartSectionClick(
+                "country",
+                categoryName,
+                `Holdings in ${categoryName}`,
+                categoryId,
+              )
+            }
+            onCardClick={() => openAllocationSheet(allocations?.regions)}
+          />
         </div>
 
         {/* Row 4: Custom Groups (under composition, col-span-3) */}

@@ -110,7 +110,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
                     />
                   )}
                   <span
-                    className="relative flex size-7 shrink-0 items-center justify-center outline-none"
+                    className="[&_path[opacity]]:hidden relative flex size-7 shrink-0 items-center justify-center outline-none"
                     aria-hidden="true"
                   >
                     {renderIcon(item.icon)}
@@ -138,7 +138,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
               }}
             >
               <span
-                className="relative flex size-7 shrink-0 items-center justify-center outline-none"
+                className="[&_path[opacity]]:hidden relative flex size-7 shrink-0 items-center justify-center outline-none"
                 aria-hidden="true"
               >
                 <Icons.Search2 className="size-6" />
@@ -190,7 +190,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
                       />
                     )}
                     <span
-                      className="relative flex size-7 shrink-0 items-center justify-center outline-none"
+                      className="[&_path[opacity]]:hidden relative flex size-7 shrink-0 items-center justify-center outline-none"
                       aria-hidden="true"
                     >
                       <Icons.CirclesFour className="size-6" />
@@ -216,7 +216,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
                           aria-current={isActive ? "page" : undefined}
                           className="relative z-10 flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm"
                         >
-                          <span className="flex size-6 shrink-0 items-center justify-center">
+                          <span className="[&_path[opacity]]:hidden flex size-6 shrink-0 items-center justify-center">
                             {renderIcon(item.icon)}
                           </span>
                           <span className="truncate text-left">{item.title}</span>
@@ -245,7 +245,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
                       />
                     )}
                     <span
-                      className="relative flex size-7 shrink-0 items-center justify-center outline-none"
+                      className="[&_path[opacity]]:hidden relative flex size-7 shrink-0 items-center justify-center outline-none"
                       aria-hidden="true"
                     >
                       <Icons.Addons className="size-5" />
@@ -271,7 +271,7 @@ export function FloatingNavigationBar({ navigation }: FloatingNavigationBarProps
                           aria-current={isActive ? "page" : undefined}
                           className="relative z-10 flex w-full items-center gap-3 rounded-full px-3 py-2 text-sm"
                         >
-                          <span className="flex size-6 shrink-0 items-center justify-center">
+                          <span className="[&_path[opacity]]:hidden flex size-6 shrink-0 items-center justify-center">
                             {renderIcon(item.icon)}
                           </span>
                           <span className="truncate text-left">{item.title}</span>

@@ -39,10 +39,10 @@ use crate::secrets::SecretStore;
 use wealthfolio_market_data::{
     mic_to_currency, mic_to_exchange_name, yahoo_exchange_to_mic, yahoo_suffix_to_mic,
     AlphaVantageProvider, AssetProfile as MarketAssetProfile, BoerseFrankfurtProvider,
-    BondQuoteMetadata, FinnhubProvider, MarketDataAppProvider, MetalPriceApiProvider,
-    OpenFigiProvider, ProviderId, ProviderRegistry, Quote as MarketQuote, QuoteContext,
-    ResolverChain, SearchResult as MarketSearchResult, SplitEvent, UsTreasuryCalcProvider,
-    YahooProvider,
+    BondQuoteMetadata, FinectProvider, FinnhubProvider, MarketDataAppProvider,
+    MetalPriceApiProvider, OpenFigiProvider, ProviderId, ProviderRegistry, Quote as MarketQuote,
+    QuoteContext, ResolverChain, SearchResult as MarketSearchResult, SplitEvent,
+    UsTreasuryCalcProvider, YahooProvider,
 };
 
 /// Market data error types.
@@ -141,12 +141,6 @@ impl MarketDataClient {
             }
         }
 
-        // Always register OpenFIGI — it's free, keyless, and only handles bond search/profile.
-        // This ensures bond ISIN/FIGI lookup works without users needing to enable it in settings.
-        if !providers.iter().any(|p| p.id() == DATA_SOURCE_OPENFIGI) {
-            providers.push(Arc::new(OpenFigiProvider::new()));
-        }
-
         if providers.is_empty() {
             warn!(
                 "No market data providers initialized! Enabled: {:?}, Errors: {:?}",
@@ -180,13 +174,16 @@ impl MarketDataClient {
                 let provider = YahooProvider::new()
                     .await
                     .map_err(MarketDataClientError::from)?;
-                Ok(Some(Arc::new(provider)))
+                Ok(Some(
+                    Arc::new(provider) as Arc<dyn wealthfolio_market_data::MarketDataProvider>
+                ))
             }
             DATA_SOURCE_MARKET_DATA_APP => {
                 if let Ok(Some(key)) = secret_store.get_secret(provider_id) {
                     if !key.is_empty() {
                         let provider = MarketDataAppProvider::new(key);
-                        return Ok(Some(Arc::new(provider)));
+                        return Ok(Some(Arc::new(provider)
+                            as Arc<dyn wealthfolio_market_data::MarketDataProvider>));
                     }
                 }
                 Ok(None)
@@ -195,7 +192,9 @@ impl MarketDataClient {
                 if let Ok(Some(key)) = secret_store.get_secret(provider_id) {
                     if !key.is_empty() {
                         let provider = AlphaVantageProvider::new(key);
-                        return Ok(Some(Arc::new(provider)));
+
+                        return Ok(Some(Arc::new(provider)
+                            as Arc<dyn wealthfolio_market_data::MarketDataProvider>));
                     }
                 }
                 Ok(None)
@@ -204,7 +203,8 @@ impl MarketDataClient {
                 if let Ok(Some(key)) = secret_store.get_secret(provider_id) {
                     if !key.is_empty() {
                         let provider = MetalPriceApiProvider::new(key);
-                        return Ok(Some(Arc::new(provider)));
+                        return Ok(Some(Arc::new(provider)
+                            as Arc<dyn wealthfolio_market_data::MarketDataProvider>));
                     }
                 }
                 Ok(None)
@@ -213,22 +213,37 @@ impl MarketDataClient {
                 if let Ok(Some(key)) = secret_store.get_secret(provider_id) {
                     if !key.is_empty() {
                         let provider = FinnhubProvider::new(key);
-                        return Ok(Some(Arc::new(provider)));
+                        return Ok(Some(Arc::new(provider)
+                            as Arc<dyn wealthfolio_market_data::MarketDataProvider>));
                     }
                 }
                 Ok(None)
             }
             DATA_SOURCE_OPENFIGI => {
                 // OpenFIGI doesn't need an API key (free tier)
-                Ok(Some(Arc::new(OpenFigiProvider::new())))
+                Ok(Some(Arc::new(OpenFigiProvider::new())
+                    as Arc<dyn wealthfolio_market_data::MarketDataProvider>))
             }
             DATA_SOURCE_US_TREASURY_CALC => {
                 // Calculates bond prices from US Treasury yield curve data (no API key)
-                Ok(Some(Arc::new(UsTreasuryCalcProvider::new())))
+                Ok(Some(Arc::new(UsTreasuryCalcProvider::new())
+                    as Arc<dyn wealthfolio_market_data::MarketDataProvider>))
             }
             DATA_SOURCE_BOERSE_FRANKFURT => {
                 // European bond pricing via Börse Frankfurt (no API key)
-                Ok(Some(Arc::new(BoerseFrankfurtProvider::new())))
+                Ok(Some(Arc::new(BoerseFrankfurtProvider::new())
+                    as Arc<dyn wealthfolio_market_data::MarketDataProvider>))
+            }
+            DATA_SOURCE_FINECT => {
+                if let Ok(Some(key)) = secret_store.get_secret(provider_id) {
+                    if !key.is_empty() {
+                        let provider = FinectProvider::new(key);
+
+                        return Ok(Some(Arc::new(provider)
+                            as Arc<dyn wealthfolio_market_data::MarketDataProvider>));
+                    }
+                }
+                Ok(None)
             }
             _ => {
                 warn!("Unknown provider ID: {}", provider_id);
@@ -391,6 +406,7 @@ impl MarketDataClient {
             DATA_SOURCE_FINNHUB => DataSource::Finnhub,
             DATA_SOURCE_US_TREASURY_CALC => DataSource::UsTreasuryCalc,
             DATA_SOURCE_BOERSE_FRANKFURT => DataSource::BoerseFrankfurt,
+            DATA_SOURCE_FINECT => DataSource::Finect,
             DATA_SOURCE_MANUAL => DataSource::Manual,
             _ => DataSource::Yahoo, // Default fallback
         };

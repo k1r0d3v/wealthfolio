@@ -1,35 +1,34 @@
+import { EmptyPlaceholder } from "@wealthfolio/ui";
 import { Button } from "@wealthfolio/ui/components/ui/button";
 import { Icons } from "@wealthfolio/ui/components/ui/icons";
-import { EmptyPlaceholder } from "@wealthfolio/ui";
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { SwipablePage, SwipablePageView } from "@/components/page";
+import { updateAlternativeAssetMetadata } from "@/adapters";
 import { AccountSelector } from "@/components/account-selector";
 import { ActionPalette, type ActionPaletteGroup } from "@/components/action-palette";
+import { ClassificationSheet } from "@/components/classification/classification-sheet";
+import { SwipablePage, SwipablePageView } from "@/components/page";
 import { useAccounts } from "@/hooks/use-accounts";
-import { useHoldings } from "@/hooks/use-holdings";
 import {
   useAlternativeHoldings,
   useDeleteAlternativeAsset,
   useLinkLiability,
   useUnlinkLiability,
 } from "@/hooks/use-alternative-assets";
+import { useUpdatePortfolioMutation } from "@/hooks/use-calculate-portfolio";
+import { useHoldings } from "@/hooks/use-holdings";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { useIsMobileViewport } from "@/hooks/use-platform";
+import { canAddHoldings } from "@/lib/activity-restrictions";
 import {
-  PORTFOLIO_ACCOUNT_ID,
   HOLDING_CATEGORY_FILTERS,
+  PORTFOLIO_ACCOUNT_ID,
   apiKindToAlternativeAssetKind,
 } from "@/lib/constants";
-import { Account, HoldingType, AlternativeAssetHolding, AlternativeAssetKind } from "@/lib/types";
-import { canAddHoldings } from "@/lib/activity-restrictions";
-import { useIsMobileViewport } from "@/hooks/use-platform";
-import { HoldingsMobileFilterSheet } from "./components/holdings-mobile-filter-sheet";
-import { HoldingsTable } from "./components/holdings-table";
-import { HoldingsTableMobile } from "./components/holdings-table-mobile";
-import { AlternativeHoldingsTable } from "./components/alternative-holdings-table";
-import { AlternativeHoldingsListMobile } from "./components/alternative-holdings-list-mobile";
-import { HoldingsEditMode } from "./components/holdings-edit-mode";
+import { QueryKeys } from "@/lib/query-keys";
+import { useSettingsContext } from "@/lib/settings-provider";
+import { Account, AlternativeAssetHolding, AlternativeAssetKind, HoldingType } from "@/lib/types";
 import {
   AlternativeAssetQuickAddModal,
   AssetDetailsSheet,
@@ -38,12 +37,13 @@ import {
   type LinkableAsset,
   type LinkedLiability,
 } from "@/pages/asset/alternative-assets";
-import { updateAlternativeAssetMetadata } from "@/adapters";
-import { ClassificationSheet } from "@/components/classification/classification-sheet";
-import { useUpdatePortfolioMutation } from "@/hooks/use-calculate-portfolio";
 import { useQueryClient } from "@tanstack/react-query";
-import { QueryKeys } from "@/lib/query-keys";
-import { useSettingsContext } from "@/lib/settings-provider";
+import { AlternativeHoldingsListMobile } from "./components/alternative-holdings-list-mobile";
+import { AlternativeHoldingsTable } from "./components/alternative-holdings-table";
+import { HoldingsEditMode } from "./components/holdings-edit-mode";
+import { HoldingsMobileFilterSheet } from "./components/holdings-mobile-filter-sheet";
+import { HoldingsTable } from "./components/holdings-table";
+import { HoldingsTableMobile } from "./components/holdings-table-mobile";
 
 export const HoldingsPage = () => {
   const isMobileViewport = useIsMobileViewport();

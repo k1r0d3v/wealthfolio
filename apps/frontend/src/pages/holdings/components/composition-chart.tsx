@@ -11,7 +11,7 @@ import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@wealthfolio/ui/components/ui/tooltip";
 import { useEffect, useMemo, useRef, type FC } from "react";
 import { Link } from "react-router-dom";
-import { Tooltip as ChartTooltip, ResponsiveContainer, type TreemapNode, Treemap } from "recharts";
+import { Tooltip as ChartTooltip, ResponsiveContainer, Treemap, type TreemapNode } from "recharts";
 
 type ReturnType = "daily" | "total";
 type DisplayMode = "symbol" | "name";
@@ -149,7 +149,7 @@ const CustomizedContent: FC<CustomizedContentProps> = ({
               y={y + height / 2}
               textAnchor="middle"
               fill="currentColor"
-              className="font-default cursor-pointer text-sm hover:underline"
+              className="font-default cursor-pointer text-sm font-semibold hover:underline"
               style={{
                 fontSize: fontSize + 1,
               }}
@@ -163,7 +163,7 @@ const CustomizedContent: FC<CustomizedContentProps> = ({
             y={y + height / 2 + fontSize}
             textAnchor="middle"
             fill="currentColor"
-            className="text- font-thin"
+            className="text- font-bold"
             style={{
               fontSize: fontSize2,
             }}

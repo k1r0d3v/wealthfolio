@@ -1,3 +1,7 @@
+import { parseOccSymbol } from "@/lib/occ-symbol";
+import { safeDivide } from "@/lib/utils";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Badge, GainPercent } from "@wealthfolio/ui";
 import { Button } from "@wealthfolio/ui/components/ui/button";
 import { DataTable } from "@wealthfolio/ui/components/ui/data-table";
 import { DataTableColumnHeader } from "@wealthfolio/ui/components/ui/data-table/data-table-column-header";
@@ -8,18 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@wealthfolio/ui/components/ui/dropdown-menu";
 import { Icons } from "@wealthfolio/ui/components/ui/icons";
-import { parseOccSymbol } from "@/lib/occ-symbol";
-import { safeDivide } from "@/lib/utils";
-import type { ColumnDef } from "@tanstack/react-table";
-import { GainPercent, Badge } from "@wealthfolio/ui";
 
 import { TickerAvatar } from "@/components/ticker-avatar";
-import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@wealthfolio/ui/components/ui/tooltip";
 import { useBalancePrivacy } from "@/hooks/use-balance-privacy";
 import { useSettingsContext } from "@/lib/settings-provider";
 import { Holding } from "@/lib/types";
 import { AmountDisplay, QuantityDisplay } from "@wealthfolio/ui";
+import { Skeleton } from "@wealthfolio/ui/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@wealthfolio/ui/components/ui/tooltip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -186,10 +186,11 @@ const getColumns = (
       const navigate = useNavigate();
       const holding = row.original;
       const symbol = holding.instrument?.symbol ?? holding.id;
+      const name = holding.instrument?.name ?? null;
 
       // Parse OCC symbol for options
       const parsedOption = parseOccSymbol(symbol);
-      const displaySymbol = parsedOption ? parsedOption.underlying : symbol;
+      const displayTitle = parsedOption ? parsedOption.underlying : name;
 
       // Option subtitle: "Mar 29 $150 CALL"
       const optionSubtitle = parsedOption
@@ -211,15 +212,15 @@ const getColumns = (
           />
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
-              <span className="font-medium">{displaySymbol}</span>
+              <span className="font-semibold">{displayTitle}</span>
               {isManual && (
                 <Badge variant="secondary" className="h-4 px-1 py-0 text-[10px]">
                   Manual
                 </Badge>
               )}
             </div>
-            <span className="text-muted-foreground line-clamp-1 text-xs">
-              {optionSubtitle ?? holding.instrument?.name ?? null}
+            <span className="line-clamp-1 text-muted-foreground truncate text-xs font-thin">
+              {optionSubtitle ?? symbol ?? null}
             </span>
           </div>
         </div>

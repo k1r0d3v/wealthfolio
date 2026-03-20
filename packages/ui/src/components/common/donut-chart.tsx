@@ -1,7 +1,7 @@
 import type React from "react";
 import type { ComponentProps } from "react";
 import { useMemo, useState } from "react";
-import { Cell, Pie, PieChart } from "recharts";
+import { Cell, Pie, PieChart, PieSectorDataItem } from "recharts";
 import type { NameType, Payload, ValueType } from "recharts/types/component/DefaultTooltipContent";
 import { useBalancePrivacy } from "../../hooks/use-balance-privacy";
 import { formatPercent } from "../../lib/utils";
@@ -106,7 +106,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
   const { isBalanceHidden } = useBalancePrivacy();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
-  const handlePieEnter = (_: React.MouseEvent, index: number) => {
+  const handlePieEnter = (_data: PieSectorDataItem, index: number) => {
     setHoverIndex(index);
   };
 

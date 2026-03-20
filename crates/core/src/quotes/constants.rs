@@ -11,7 +11,8 @@ pub const DATA_SOURCE_FINNHUB: &str = "FINNHUB";
 pub const DATA_SOURCE_OPENFIGI: &str = "OPENFIGI";
 pub const DATA_SOURCE_US_TREASURY_CALC: &str = "US_TREASURY_CALC";
 pub const DATA_SOURCE_BOERSE_FRANKFURT: &str = "BOERSE_FRANKFURT";
-pub const MARKET_DATA_PROVIDER_IDS: [&str; 8] = [
+pub const DATA_SOURCE_FINECT: &str = "FINECT";
+pub const MARKET_DATA_PROVIDER_IDS: [&str; 9] = [
     DATA_SOURCE_YAHOO,
     DATA_SOURCE_ALPHA_VANTAGE,
     DATA_SOURCE_MARKET_DATA_APP,
@@ -20,6 +21,7 @@ pub const MARKET_DATA_PROVIDER_IDS: [&str; 8] = [
     DATA_SOURCE_OPENFIGI,
     DATA_SOURCE_US_TREASURY_CALC,
     DATA_SOURCE_BOERSE_FRANKFURT,
+    DATA_SOURCE_FINECT,
 ];
 
 /// Default number of days of history to fetch for new symbols when no activity date exists.
